@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>김태경 · 구조를 분석하는 개발자</title>
+<meta name="description" content="구조를 분석해 끝까지 파고드는 백엔드 지향 풀스택 개발자 김태경의 포트폴리오." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+<style>
+  :root{
+    --paper:#EFEADB; --paper-2:#E5DECB;
+    --forest:#14302A; --forest-2:#1C3D35;
+    --ink:#16302A; --ink-soft:#42564E;
+    --cream:#F4F0E4; --gold:#BE9038; --gold-soft:#C9A857; --vermilion:#BC4A30;
+    --teal:#3F7A6B;
+    --line:rgba(22,48,42,.14); --line-strong:rgba(22,48,42,.28); --line-cream:rgba(244,240,228,.16);
+    --serif:'Gowun Batang', serif;
+    --sans:'Pretendard', -apple-system, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  ::selection{background:var(--gold);color:var(--forest);}
+  a{color:inherit;}
+
+  .grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:58px 58px;opacity:.5;
+    -webkit-mask-image:radial-gradient(ellipse 120% 85% at 50% 8%,#000 35%,transparent 100%);
+            mask-image:radial-gradient(ellipse 120% 85% at 50% 8%,#000 35%,transparent 100%);}
+  .wrap{position:relative;z-index:1;}
+  .container{max-width:1120px;margin:0 auto;padding:0 32px;}
+  .mono{font-family:var(--mono);}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+    padding:18px 32px;transition:background .35s,padding .35s,box-shadow .35s;}
+  nav.scrolled{background:rgba(239,234,219,.9);backdrop-filter:blur(12px);padding:12px 32px;box-shadow:0 1px 0 var(--line);}
+  .brand{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;color:var(--ink);}
+  .brand .b{color:var(--vermilion);}
+  .nav-links{display:flex;gap:24px;}
+  .nav-links a{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft);text-decoration:none;transition:color .2s;position:relative;}
+  .nav-links a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--gold);transition:width .25s;}
+  .nav-links a:hover{color:var(--ink);}.nav-links a:hover::after{width:100%;}
+  @media(max-width:720px){.nav-links{display:none;}}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 70px;position:relative;background:var(--forest);color:var(--cream);overflow:hidden;}
+  .hero-bgrid{position:absolute;inset:0;background-image:linear-gradient(var(--line-cream) 1px,transparent 1px),linear-gradient(90deg,var(--line-cream) 1px,transparent 1px);background-size:72px 72px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 80% at 30% 30%,#000 10%,transparent 80%);mask-image:radial-gradient(ellipse 90% 80% at 30% 30%,#000 10%,transparent 80%);}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;width:100%;position:relative;z-index:2;}
+  @media(max-width:920px){.hero-grid{grid-template-columns:1fr;gap:44px;}}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--gold-soft);text-transform:uppercase;margin-bottom:26px;display:flex;align-items:center;gap:12px;}
+  .eyebrow::before{content:'';width:28px;height:1px;background:var(--gold-soft);}
+  .hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5.8vw,4rem);font-weight:700;line-height:1.12;letter-spacing:-.01em;}
+  .hero h1 .hl{color:var(--gold-soft);}
+  .hero .name{font-family:var(--mono);font-size:13px;letter-spacing:.28em;color:rgba(244,240,228,.55);margin-top:26px;}
+  .hero .sub{font-size:1.04rem;color:rgba(244,240,228,.82);max-width:42ch;margin-top:22px;line-height:1.75;}
+  .hero-cta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;}
+  .btn{font-family:var(--mono);font-size:12.5px;letter-spacing:.03em;text-decoration:none;padding:12px 20px;border-radius:3px;transition:all .25s;display:inline-flex;align-items:center;gap:9px;}
+  .btn.primary{background:var(--gold);color:var(--forest);font-weight:500;}
+  .btn.primary:hover{background:var(--gold-soft);transform:translateY(-2px);}
+  .btn.ghost{border:1px solid rgba(201,168,87,.4);color:var(--cream);}
+  .btn.ghost:hover{border-color:var(--gold-soft);color:var(--gold-soft);transform:translateY(-2px);}
+
+  /* signature diff */
+  .diff{background:var(--cream);border:1px solid var(--line-strong);border-radius:6px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(0,0,0,.5);}
+  .diff-top{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--paper-2);}
+  .diff-top .dot{width:9px;height:9px;border-radius:50%;}
+  .diff-top .dot.r{background:var(--vermilion);}.diff-top .dot.y{background:var(--gold);}.diff-top .dot.g{background:var(--teal);}
+  .diff-top .ttl{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-left:6px;letter-spacing:.03em;}
+  .diff-body{padding:22px 22px 24px;font-family:var(--mono);font-size:12.5px;color:var(--ink);}
+  .diff-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .tag{padding:1px 7px;border-radius:3px;font-size:9.5px;}
+  .tag.before{background:rgba(188,74,48,.12);color:var(--vermilion);border:1px solid rgba(188,74,48,.3);}
+  .tag.after{background:rgba(63,122,107,.12);color:var(--teal);border:1px solid rgba(63,122,107,.35);}
+  .node{padding:9px 12px;border:1px solid var(--line-strong);border-radius:4px;margin-bottom:7px;background:var(--paper);display:flex;justify-content:space-between;align-items:center;}
+  .node .k{color:var(--ink-soft);}
+  .node .st{font-size:11px;padding:1px 8px;border-radius:3px;}
+  .st.ord{background:rgba(63,122,107,.14);color:var(--teal);}
+  .st.can{background:rgba(188,74,48,.12);color:var(--vermilion);}
+  .node.lock{border-color:rgba(188,74,48,.4);}
+  .node.child{margin-left:18px;position:relative;}
+  .node.child::before{content:'';position:absolute;left:-12px;top:50%;width:10px;height:1px;background:var(--line-strong);}
+  .diff-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--gold);font-size:11px;letter-spacing:.08em;}
+  .diff-divider .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6;}
+  .annot{font-family:var(--mono);font-size:10.5px;color:var(--vermilion);margin-top:4px;padding-left:2px;}
+  .annot.ok{color:var(--teal);}
+
+  .reveal-up{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
+  .reveal-up.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.reveal-up{transition:none;opacity:1;transform:none;}}
+
+  section{position:relative;}
+  .sec{padding:110px 0;}
+  .sec-head{margin-bottom:54px;}
+  .sec-tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--vermilion);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  .sec-tag .fig{color:var(--ink-soft);}
+  .sec-title{font-family:var(--serif);font-size:clamp(1.8rem,3.8vw,2.6rem);font-weight:700;letter-spacing:-.01em;line-height:1.14;}
+  .sec-desc{color:var(--ink-soft);max-width:56ch;margin-top:16px;}
+
+  /* ABOUT */
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  @media(max-width:800px){.about{grid-template-columns:1fr;gap:30px;}}
+  .about .big{font-family:var(--serif);font-size:clamp(1.4rem,2.7vw,1.8rem);line-height:1.5;color:var(--ink);border-left:2px solid var(--gold);padding-left:24px;}
+  .about .big .hl{color:var(--gold);}
+  .about p{color:var(--ink-soft);margin-bottom:16px;}
+  .about p strong{color:var(--ink);font-weight:600;}
+  .facts{border-top:1px solid var(--line);margin-top:8px;}
+  .facts .row{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);font-size:.9rem;}
+  .facts .k{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;}
+  .facts .v{color:var(--ink);text-align:right;}
+
+  /* SKILLS */
+  .skills{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  @media(max-width:720px){.skills{grid-template-columns:1fr;}}
+  .skill{border:1px solid var(--line-strong);border-radius:6px;padding:24px 26px;background:var(--cream);transition:border-color .25s,transform .25s;}
+  .skill:hover{border-color:var(--gold);transform:translateY(-2px);}
+  .skill .cat{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;}
+  .skill .cat .idx{color:var(--ink-soft);margin-right:6px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-family:var(--mono);font-size:12px;padding:5px 11px;border:1px solid var(--line-strong);border-radius:3px;color:var(--ink);background:rgba(255,255,255,.3);transition:all .2s;}
+  .chip:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* CASE STUDIES */
+  .cases{display:flex;flex-direction:column;gap:20px;}
+  .case{border:1px solid var(--line-strong);border-radius:8px;background:var(--cream);overflow:hidden;transition:border-color .3s,transform .3s,box-shadow .3s;}
+  .case:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 18px 40px -26px rgba(22,48,42,.5);}
+  .case-top{display:flex;align-items:center;gap:14px;padding:20px 26px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .case-id{font-family:var(--mono);font-size:11px;color:var(--vermilion);letter-spacing:.05em;border:1px solid rgba(188,74,48,.3);padding:3px 9px;border-radius:3px;background:rgba(188,74,48,.06);}
+  .case-name{font-family:var(--serif);font-size:1.25rem;font-weight:700;}
+  .case-src{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);margin-left:auto;letter-spacing:.04em;}
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+  @media(max-width:760px){.case-grid{grid-template-columns:1fr;}}
+  .case-col{padding:22px 26px;border-right:1px solid var(--line);}
+  .case-col:last-child{border-right:none;}
+  @media(max-width:760px){.case-col{border-right:none;border-bottom:1px solid var(--line);}.case-col:last-child{border-bottom:none;}}
+  .case-col .step{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .step.problem{color:var(--vermilion);}
+  .step.cause{color:var(--gold);}
+  .step.fix{color:var(--teal);}
+  .case-col p{font-size:.92rem;color:var(--ink-soft);line-height:1.65;}
+  .case-col p b{color:var(--ink);font-weight:700;}
+  .case-foot{padding:14px 26px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:7px;background:var(--paper-2);}
+  .case-foot .chip{font-size:11px;padding:4px 9px;}
+
+  /* PROJECTS */
+  .projects{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:760px){.projects{grid-template-columns:1fr;}}
+  .proj{border:1px solid var(--line-strong);border-radius:8px;padding:28px 28px 24px;background:var(--cream);transition:border-color .3s,transform .3s;display:flex;flex-direction:column;}
+  .proj:hover{border-color:var(--gold);transform:translateY(-3px);}
+  .proj .pmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:12px;}
+  .proj .pname{font-family:var(--serif);font-size:1.6rem;font-weight:700;margin-bottom:6px;}
+  .proj .prole{font-size:.82rem;color:var(--teal);font-family:var(--mono);margin-bottom:16px;letter-spacing:.02em;}
+  .proj .pdesc{font-size:.92rem;color:var(--ink-soft);line-height:1.65;margin-bottom:18px;flex:1;}
+  .proj .pstack{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+  .proj .pstack .chip{font-size:11px;padding:4px 9px;}
+  .proj .plink{font-family:var(--mono);font-size:12px;color:var(--vermilion);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:gap .25s;}
+  .proj .plink:hover{gap:13px;}
+
+  /* CONTACT */
+  .contact{padding:120px 0 90px;}
+  .contact-inner{background:var(--forest);color:var(--cream);border-radius:10px;padding:64px 48px;text-align:center;position:relative;overflow:hidden;}
+  .contact-inner .corner{position:absolute;font-family:var(--mono);font-size:11px;color:var(--gold-soft);letter-spacing:.06em;opacity:.6;}
+  .corner.tl{top:16px;left:20px;}.corner.tr{top:16px;right:20px;}.corner.bl{bottom:16px;left:20px;}.corner.br{bottom:16px;right:20px;}
+  .contact h2{font-family:var(--serif);font-size:clamp(1.9rem,4vw,2.8rem);font-weight:700;margin-bottom:16px;letter-spacing:-.01em;}
+  .contact p{color:rgba(244,240,228,.82);max-width:38ch;margin:0 auto 34px;}
+  .links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+
+  footer{padding:30px 0;border-top:1px solid var(--line);text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--ink-soft);}
+  footer .b{color:var(--vermilion);}
+
+  .hero .anim{opacity:0;transform:translateY(18px);animation:rise .85s cubic-bezier(.2,.7,.2,1) forwards;}
+  .hero .anim.d1{animation-delay:.05s;}.hero .anim.d2{animation-delay:.18s;}.hero .anim.d3{animation-delay:.32s;}.hero .anim.d4{animation-delay:.46s;}.hero .anim.d5{animation-delay:.6s;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+  @media(prefers-reduced-motion:reduce){.hero .anim{animation:none;opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav id="nav">
+  <div class="brand">TAEGYEONG<span class="b">.</span>DEV</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#cases">case_studies</a>
+    <a href="#projects">projects</a>
+    <a href="#contact">contact</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-bgrid"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-left">
+          <div class="eyebrow anim d1">Backend-leaning Full-stack Developer</div>
+          <h1 class="anim d2">구조를 분석해<br><span class="hl">끝까지 파고드는</span> 개발자</h1>
+          <div class="name anim d3">KIM&nbsp;&nbsp;TAEGYEONG</div>
+          <p class="sub anim d4">화면을 동작시키는 것을 넘어, 그 뒤의 데이터 구조와 예외 상황까지 파고들어 오래 안정적으로 동작하는 서비스를 만듭니다.</p>
+          <div class="hero-cta anim d5">
+            <a href="#cases" class="btn primary">문제 해결 기록 보기 →</a>
+            <a href="https://github.com/tae0-00" target="_blank" rel="noopener" class="btn ghost">GitHub ↗</a>
+          </div>
+        </div>
+        <div class="hero-right anim d4">
+          <div class="diff">
+            <div class="diff-top">
+              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+              <span class="ttl">order_cancel.structure</span>
+            </div>
+            <div class="diff-body">
+              <div class="diff-label"><span class="tag before">BEFORE</span> 주문 단위 상태 관리</div>
+              <div class="node lock"><span class="k">ORDER #1024</span><span class="st can">CANCELLED</span></div>
+              <div class="annot">↳ 일부만 취소할 방법이 없음 — 전부 취소됨</div>
+              <div class="diff-divider"><span class="ln"></span>구조 재설계<span class="ln"></span></div>
+              <div class="diff-label"><span class="tag after">AFTER</span> 상품 단위 상태 관리</div>
+              <div class="node"><span class="k">ORDER #1024</span><span class="st ord">ACTIVE</span></div>
+              <div class="node child"><span class="k">item · 사료</span><span class="st ord">ORDERED</span></div>
+              <div class="node child"><span class="k">item · 장난감</span><span class="st can">CANCELLED</span></div>
+              <div class="node child"><span class="k">item · 간식</span><span class="st ord">ORDERED</span></div>
+              <div class="annot ok">↳ ORDER_DETAIL에 상태 컬럼 추가 → 정합성 확보</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="sec">
+    <div class="container">
+      <div class="sec-head reveal-up">
+        <div class="sec-tag"><span class="fig">FIG.01</span> · About</div>
+        <h2 class="sec-title">소개</h2>
+      </div>
+      <div class="about">
+        <div class="reveal-up">
+          <p class="big">같은 기능도 데이터를 <span class="hl">어떤 구조로 두느냐</span>에 따라 완전히 달라진다는 것 — 그 지점이 가장 흥미로웠습니다.</p>
+        </div>
+        <div class="reveal-up">
+          <p>기획하는 사람을 넘어 직접 만드는 사람이 되고 싶어 풀스택 개발에 뛰어들었습니다. 두 번의 팀 프로젝트에서 <strong>추천 로직 분기와 동적 쿼리를 설계</strong>하고, <strong>외부 라이브러리에 기대지 않고 직접 구현</strong>하고, <strong>장애 상황까지 대비한 폴백</strong>을 넣으면서, 화면에 보이는 결과보다 그 뒤의 구조와 예외 처리에 더 흥미를 느끼는 저를 발견했습니다.</p>
+          <p>눈에 보이는 증상이 아니라 구조에서 원인을 찾아 해결할 때 가장 몰입합니다.</p>
+          <div class="facts">
+            <div class="row"><span class="k">Role</span><span class="v">Backend-leaning Full-stack</span></div>
+            <div class="row"><span class="k">Education</span><span class="v">KH정보교육원 풀스택 · 명지전문대</span></div>
+            <div class="row"><span class="k">Cert</span><span class="v">지적산업기사 · SQLD(준비 중)</span></div>
+            <div class="row"><span class="k">Based</span><span class="v">Seoul, KR</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="sec" style="padding-top:0;">
+    <div class="container">
+      <div class="sec-head reveal-up">
+        <div class="sec-tag"><span class="fig">FIG.02</span> · Stack</div>
+        <h2 class="sec-title">기술 스택</h2>
+      </div>
+      <div class="skills reveal-up">
+        <div class="skill">
+          <div class="cat"><span class="idx">B/</span>Backend</div>
+          <div class="chips"><span class="chip">Java</span><span class="chip">Spring</span><span class="chip">Spring Boot</span><span class="chip">JSP / Servlet</span><span class="chip">MyBatis</span><span class="chip">JWT / OAuth2</span></div>
+        </div>
+        <div class="skill">
+          <div class="cat"><span class="idx">F/</span>Frontend</div>
+          <div class="chips"><span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">React (Next.js)</span><span class="chip">jQuery / Ajax</span><span class="chip">HTML5</span><span class="chip">CSS3</span></div>
+        </div>
+        <div class="skill">
+          <div class="cat"><span class="idx">D/</span>Database</div>
+          <div class="chips"><span class="chip">Oracle</span><span class="chip">MySQL</span><span class="chip">AWS RDS</span><span class="chip">동적 SQL</span><span class="chip">스키마 설계</span></div>
+        </div>
+        <div class="skill">
+          <div class="cat"><span class="idx">T/</span>Tooling</div>
+          <div class="chips"><span class="chip">Git</span><span class="chip">Sourcetree</span><span class="chip">Eclipse (STS)</span><span class="chip">VS Code</span><span class="chip">Tomcat</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section id="cases" class="sec">
+    <div class="container">
+      <div class="sec-head reveal-up">
+        <div class="sec-tag"><span class="fig">FIG.03</span> · Deep dives</div>
+        <h2 class="sec-title">문제 해결 기록</h2>
+        <p class="sec-desc">기능을 동작시키는 데 그치지 않고, 문제의 원인을 구조에서 찾아 해결한 작업들을 기록합니다. <span class="mono" style="color:var(--ink-soft);font-size:.85em;">문제 → 원인 → 해결</span></p>
+      </div>
+      <div class="cases">
+
+        <article class="case reveal-up">
+          <div class="case-top"><span class="case-id">CASE 01</span><span class="case-name">주문 부분취소 — DB 구조 재설계</span><span class="case-src">집사상점 · 관리자</span></div>
+          <div class="case-grid">
+            <div class="case-col"><div class="step problem">● 문제</div><p>주문 취소가 <b>주문 전체 단위로만</b> 가능해, 한 주문에 담긴 여러 상품 중 일부만 취소할 방법이 없었습니다.</p></div>
+            <div class="case-col"><div class="step cause">▲ 원인</div><p>취소 상태를 <b>주문 단위로만 관리</b>해, 상품별 상태를 담을 구조 자체가 없었습니다.</p></div>
+            <div class="case-col"><div class="step fix">✓ 해결</div><p>ORDER_DETAIL에 <b>상품별 상태 컬럼을 추가</b>하고, 마이페이지·관리자·배송비 귀책 로직을 전면 재구현해 데이터 정합성을 확보했습니다.</p></div>
+          </div>
+          <div class="case-foot"><span class="chip">스키마 재설계</span><span class="chip">상태 동적 계산(CASE)</span><span class="chip">배송비 귀책 분기</span><span class="chip">데이터 정합성</span></div>
+        </article>
+
+        <article class="case reveal-up">
+          <div class="case-top"><span class="case-id">CASE 02</span><span class="case-name">외부 API 장애 대비 — Haversine 폴백</span><span class="case-src">전북로 · 역사 코스</span></div>
+          <div class="case-grid">
+            <div class="case-col"><div class="step problem">● 문제</div><p>코스 동선 계산을 외부 지도 API에 의존하다 보니, <b>API 장애 시 동선 정보가 통째로 끊길</b> 위험이 있었습니다.</p></div>
+            <div class="case-col"><div class="step cause">▲ 원인</div><p>정상 응답만 가정한 설계 — <b>외부 의존성의 실패 경로</b>가 비어 있었습니다.</p></div>
+            <div class="case-col"><div class="step fix">✓ 해결</div><p>호출 실패 시 두 좌표의 직선거리를 직접 계산하는 <b>Haversine 폴백</b>을 넣어, API가 불안정해도 동선이 끊기지 않게 했습니다.</p></div>
+          </div>
+          <div class="case-foot"><span class="chip">Kakao Directions API</span><span class="chip">Haversine</span><span class="chip">Fallback 설계</span><span class="chip">장애 대비</span></div>
+        </article>
+
+        <article class="case reveal-up">
+          <div class="case-top"><span class="case-id">CASE 03</span><span class="case-name">라이브러리 없이 직접 구현 — GeoJSON → SVG</span><span class="case-src">전북로 · 메인</span></div>
+          <div class="case-grid">
+            <div class="case-col"><div class="step problem">● 문제</div><p>행정구역 데이터를 클릭 가능한 지도로 그려야 했지만, 무거운 지도 라이브러리를 쓰기엔 과했습니다.</p></div>
+            <div class="case-col"><div class="step cause">▲ 원인</div><p>위경도 좌표계와 화면 좌표계가 달랐습니다. <b>화면 y축은 위도와 반대 방향</b>이라 그대로 그리면 지도가 뒤집혔습니다.</p></div>
+            <div class="case-col"><div class="step fix">✓ 해결</div><p>좌표를 화면에 직접 투영하고 <b>y축을 반전 처리</b>해, 라이브러리 없이 클릭 가능한 인터랙티브 SVG 지도를 완성했습니다.</p></div>
+          </div>
+          <div class="case-foot"><span class="chip">GeoJSON</span><span class="chip">좌표 투영</span><span class="chip">SVG path</span><span class="chip">No-library</span></div>
+        </article>
+
+        <article class="case reveal-up">
+          <div class="case-top"><span class="case-id">CASE 04</span><span class="case-name">방문자 중복 집계 방지 — 메모리 관리</span><span class="case-src">전북로 · 관리자 대시보드</span></div>
+          <div class="case-grid">
+            <div class="case-col"><div class="step problem">● 문제</div><p>같은 사용자가 여러 번 접속하면 방문자 수가 부풀려져, 지표를 신뢰할 수 없었습니다.</p></div>
+            <div class="case-col"><div class="step cause">▲ 원인</div><p>방문 이벤트를 단순 누적만 하고, <b>같은 사용자를 식별·중복 제거</b>하는 구조가 없었습니다.</p></div>
+            <div class="case-col"><div class="step fix">✓ 해결</div><p>날짜별 Set에 회원 ID·IP 식별자를 저장해 중복을 제거하고, <b>지난 날짜 데이터는 자동 제거</b>해 메모리가 쌓이지 않게 했습니다.</p></div>
+          </div>
+          <div class="case-foot"><span class="chip">ConcurrentHashMap</span><span class="chip">Set 중복 제거</span><span class="chip">메모리 관리</span></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="sec" style="padding-top:0;">
+    <div class="container">
+      <div class="sec-head reveal-up">
+        <div class="sec-tag"><span class="fig">FIG.04</span> · Projects</div>
+        <h2 class="sec-title">프로젝트</h2>
+      </div>
+      <div class="projects">
+        <article class="proj reveal-up">
+          <div class="pmeta">FINAL · 2026.04 — 06 · TEAM</div>
+          <div class="pname">전북로 (路)</div>
+          <div class="prole">메인 · 여행지 · 역사 코스 · 관리자 전체</div>
+          <p class="pdesc">전북의 문화유산을 '역사' 콘텐츠로 엮은 여행 플랫폼. 행정경계 GeoJSON을 직접 지도로 가공하고, 공공 API와 자체 코스를 분리·연동했습니다.</p>
+          <div class="pstack"><span class="chip">Spring Boot</span><span class="chip">Next.js</span><span class="chip">MySQL</span><span class="chip">Kakao API</span></div>
+          <a class="plink" href="https://tae0-00.github.io/portfolio/jeonbukro.html" target="_blank" rel="noopener">구현 상세 보기 →</a>
+        </article>
+        <article class="proj reveal-up">
+          <div class="pmeta">SEMI · 2026.03 — 04 · TEAM</div>
+          <div class="pname">집사상점</div>
+          <div class="prole">추천 · 상품 · 커뮤니티 · 관리자</div>
+          <p class="pdesc">반려동물 종류·연령 기반 맞춤 추천과 커뮤니티를 결합한 쇼핑몰. 확정된 DB 구조의 한계를 발견해 설계 변경까지 직접 책임진 프로젝트.</p>
+          <div class="pstack"><span class="chip">Spring</span><span class="chip">JSP</span><span class="chip">MyBatis</span><span class="chip">Oracle</span></div>
+          <a class="plink" href="https://tae0-00.github.io/portfolio/jibsa.html" target="_blank" rel="noopener">구현 상세 보기 →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <div class="contact-inner reveal-up">
+        <span class="corner tl">+</span><span class="corner tr">+</span><span class="corner bl">+</span><span class="corner br">+</span>
+        <h2>구조부터 함께 짚어볼까요</h2>
+        <p>문제의 원인을 끝까지 파고드는 개발자가 필요하시면, 편하게 연락 주세요.</p>
+        <div class="links">
+          <a class="btn primary" href="mailto:ingpitae0609@naver.com">ingpitae0609@naver.com</a>
+          <a class="btn ghost" href="https://github.com/tae0-00" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 KIM TAEGYEONG <span class="b">·</span> 구조를 분석하는 개발자</footer>
+
+</div>
+
+<script>
+  const nav=document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal-up').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
